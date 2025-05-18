@@ -40,6 +40,22 @@
                 <div class="invalid-feedback">{{ $message }}</div>
             @enderror
         </div>
+        
+        <div class="mb-3">
+            <label for="program" class="form-label">Prodi</label>
+            <input type="text" class="form-control @error('program') is-invalid @enderror" name="program" id="program" value="{{ old('program') }}" required>
+            @error('program')
+                <div class="invalid-feedback">{{ $message }}</div>
+            @enderror
+        </div>
+
+        <div class="mb-3">
+            <label for="dosen_pembimbing" class="form-label">Dosen Wali</label>
+            <input type="text" class="form-control @error('dosen_pembimbing') is-invalid @enderror" name="dosen_pembimbing" id="dosen_pembimbing" value="{{ old('dosen_pembimbing') }}" required>
+            @error('dosen_pembimbing')
+                <div class="invalid-feedback">{{ $message }}</div>
+            @enderror
+        </div>
 
         <div class="mb-3">
             <label for="password" class="form-label">Password</label>

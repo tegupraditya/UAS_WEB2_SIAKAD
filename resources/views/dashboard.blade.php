@@ -73,18 +73,18 @@
                         <div class="card-body">
                             <h5 class="card-title">Jumlah Mahasiswa</h5>
                             <p class="card-text display-6">{{ $totalMahasiswa ?? '-' }}</p>
-                            <a href="{{ route('admin.mahasiswa.index') }}" class="btn btn-outline-primary btn-sm">Lihat
+                            <a href="{{ route('admin.mahasiswa.index') }}" class="btn btn-outline-secondary btn-sm">Lihat
                                 Data</a>
                         </div>
                     </div>
                 </div>
 
-                <div class="col-md-4">
+                <div class="col-md-4 ">
                     <div class="card shadow-sm">
                         <div class="card-body">
                             <h5 class="card-title">Jumlah Dosen</h5>
                             <p class="card-text display-6">{{ $totalDosen ?? '-' }}</p>
-                            <a href="{{ route('admin.dosen.index') }}" class="btn btn-outline-primary btn-sm">Lihat
+                            <a href="{{ route('admin.dosen.index') }}" class="btn btn-outline-secondary btn-sm">Lihat
                                 Data</a>
                         </div>
                     </div>
@@ -95,7 +95,7 @@
                         <div class="card-body">
                             <h5 class="card-title">Mata Kuliah Terdaftar</h5>
                             <p class="card-text display-6">{{ $totalMatkul ?? '-' }}</p>
-                            <a href="{{ route('admin.mata-kuliah.index') }}" class="btn btn-outline-primary btn-sm">Lihat
+                            <a href="{{ route('admin.mata-kuliah.index') }}" class="btn  btn-outline-secondary btn-sm">Lihat
                                 Data</a>
                         </div>
                     </div>
@@ -107,9 +107,9 @@
             <div class="mt-5">
                 <h4>Aksi Cepat</h4>
                 <div class="d-flex gap-3 flex-wrap">
-                    <a href="{{ route('admin.mahasiswa.create') }}" class="btn btn-success">+ Tambah Mahasiswa</a>
-                    <a href="{{ route('admin.dosen.create') }}" class="btn btn-success">+ Tambah Dosen</a>
-                    <a href="{{ route('admin.mata-kuliah.create') }}" class="btn btn-success">+ Tambah Mata Kuliah</a>
+                    <a href="{{ route('admin.mahasiswa.create') }}" class="btn" style="background-color: #02709b; color: white;" >+ Tambah Mahasiswa</a>
+                    <a href="{{ route('admin.dosen.create') }}" class="btn" style="background-color: #02709b; color: white;" >+ Tambah dosen</a>
+                    <a href="{{ route('admin.mata-kuliah.create') }}" class="btn" style="background-color: #02709b; color: white;" >+ Tambah Mata Kuliah</a>
                 </div>
             </div>
             {{-- TAMPILAM DASHBOARD ADMIN END --}}
