@@ -1,10 +1,4 @@
 <x-auth-layout title="Login" section_title="Welcome Back" section_description="Login with your account">
-    @if (session('success'))
-        <div class="bg-green-50 border border-green-500 text-green-700 px-3 py-2 rounded">
-            {{ session('success') }}
-        </div>
-    @endif
-
     <form action="{{ route('auth.authenticate') }}" method="POST" class="flex flex-col gap-4 mt-4">
         @csrf
         @method('POST')
@@ -36,15 +30,8 @@
             </select>
         </div>
 
-        <button type="submit" class="bg-red-500 text-white px-3 py-2 rounded text-center mt-4 hover:bg-red-700">
+        <button type="submit" class="bg-blue-500 text-white px-3 py-2 rounded text-center mt-4 hover:bg-blue-900">
             <span>Login</span>
         </button>
-
-        <p class="text-zinc-600 text-sm text-center mt-2">
-            Don't have an account?
-            <a href="{{ route('auth.register') }}" class="text-blue-500 font-semibold underline">
-                Register Now
-            </a>
-        </p>
     </form>
 </x-auth-layout>

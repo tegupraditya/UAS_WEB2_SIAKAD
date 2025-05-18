@@ -9,11 +9,25 @@ Route::get('/', function () {
     return view('welcome');
 });
 
-Route::get('/register', [AuthController::class, 'register'])->name('auth.register');
+Route::middleware('auth')->group(function () {
+    Route::get('/dashboard/admin', function () {
+        return view('dashboard');
+    })->name('dashboard')->middleware('can:isAdmin');
+
+    Route::get('/dashboard/dosen', function () {
+        return view('dashboard');
+    })->name('dashboard')->middleware('can:isDosen');
+
+    Route::get('/dashboard/mahasiswa', function () {
+        return view('krs.index');
+    })->name('dashboard')->middleware('can:isMahasiswa');
+});
+
+
 Route::get('/login', [AuthController::class, 'login'])->name('auth.login');
-Route::post('/register', [AuthController::class, 'store'])->name('auth.store');
 Route::post('/login', [AuthController::class, 'authenticate'])->name('auth.authenticate');
 Route::delete('/logout', [AuthController::class, 'logout'])->name('auth.logout');
+Route::post('/logout', [AuthController::class, 'logout'])->name('logout');
 
 Route::middleware('auth')->group(function () {
     Route::get('/dashboard', [DashboardController::class, 'index'])->name('dashboard');

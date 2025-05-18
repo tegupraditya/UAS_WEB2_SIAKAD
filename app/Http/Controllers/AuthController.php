@@ -5,36 +5,12 @@ namespace App\Http\Controllers;
 use App\Models\User;
 use Illuminate\Http\Request;
 use Illuminate\Support\Facades\Auth;
-use Illuminate\Support\Facades\Hash;
 
 class AuthController extends Controller
 {
-    public function register()
-    {
-        return view("auth.register");
-    }
-
     public function login()
     {
         return view("auth.login");
-    }
-
-    public function store(Request $request)
-    {
-        $validated = $request->validate([
-            "name" => 'required',
-            "email" => 'required|email|unique:users',
-            "password" => 'required',
-            "confirm_password" => 'required|same:password',
-        ]);
-
-        User::create([
-            'name' => $validated['name'],
-            'email' => $validated['email'],
-            'password' => $validated['password'],
-        ]);
-
-        return redirect()->route("auth.login")->with('success', 'Register Success');
     }
 
     public function authenticate(Request $request)
@@ -42,10 +18,36 @@ class AuthController extends Controller
         $credentials = $request->validate([
             'email' => 'required|email',
             'password' => 'required',
+            'role' => 'required|in:admin,dosen,mahasiswa',
         ]);
 
-        if (Auth::attempt($credentials)) {
+        // Karena Auth::attempt hanya menerima email dan password, kita harus pisahkan cek role setelah login berhasil
+        $email = $credentials['email'];
+        $password = $credentials['password'];
+        $role = $credentials['role'];
+
+        // Coba login hanya dengan email dan password
+        if (Auth::attempt(['email' => $email, 'password' => $password])) {
+            // Cek apakah role user sesuai dengan input role
+            if (Auth::user()->role !== $role) {
+                Auth::logout();
+                return back()->withErrors([
+                    'role' => 'Role yang dipilih tidak sesuai dengan akun.',
+                ])->onlyInput('email');
+            }
+
             $request->session()->regenerate();
+
+            // Arahkan ke dashboard sesuai role
+            if ($role === 'admin') {
+                return redirect()->route('dashboard');
+            } elseif ($role === 'dosen') {
+                return redirect()->route('dashboard');
+            } elseif ($role === 'mahasiswa') {
+                return redirect()->route('dashboard');
+            }
+
+            // Default fallback
             return redirect()->intended('dashboard');
         }
 

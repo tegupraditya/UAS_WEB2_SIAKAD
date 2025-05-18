@@ -3,8 +3,8 @@
 @section('title', 'Kartu Rencana Studi (KRS)')
 
 @section('content')
-    {{-- Breadcrumb --}}
-    <nav aria-label="breadcrumb">
+{{-- Breadcrumb --}}
+<nav aria-label="breadcrumb">
     <ol class="breadcrumb bg-white px-0">
         <li class="breadcrumb-item"><a href="dashboard">Dashboard</a></li>
         <li class="breadcrumb-item dropdown">
@@ -19,47 +19,52 @@
     </ol>
 </nav>
 
+<h4 class="mb-3">Kartu Rencana Studi (KRS)</h4>
 
-    <h4 class="mb-3">Kartu Rencana Studi (KRS)</h4>
+{{-- Form Pencarian --}}
+<div class="card mb-4">
+    <div class="card-body">
+        <form class="row g-3" method="GET" action="{{ route('krs.index') }}">
+            <div class="col-md-2">
+                <label>Semester Akademik</label>
+                <input type="text" name="semester" class="form-control" value="{{ request('semester') }}" placeholder="cth: 20242">
+            </div>
+            <div class="col-md-2 align-self-end">
+                <button class="btn btn-danger">Search</button>
+            </div>
+        </form>
 
-    {{-- Form Pencarian --}}
-    <div class="card mb-4">
-        <div class="card-body">
-            <form class="row g-3">
-                <div class="col-md-2">
-                    <label>Semester Akademik</label>
-                    <input type="text" class="form-control" value="20242" >
-                </div>
-                <div class="col-md-2 align-self-end">
-                    <button class="btn btn-danger">Search</button>
-                </div>
-            </form>
-
-            {{-- Biodata Mahasiswa --}}
-            <input type="text" class="form-control" value="{{ $mahasiswa['nim'] }}" readonly>
-            <input type="text" class="form-control" value="{{ $mahasiswa['nama'] }}" readonly>
-            <input type="text" class="form-control" value="{{ $mahasiswa['jurusan'] }}" readonly>
-            <input type="text" class="form-control" value="{{ $mahasiswa['program'] }}" readonly>
-            <input type="text" class="form-control" value="{{ $mahasiswa['dosen'] }}" readonly>
-
-        </div>
+        {{-- Tampilkan biodata mahasiswa selalu --}}
+        @if(isset($mahasiswa))
+            <div class="mt-4">
+                <input type="text" class="form-control mb-2" value="{{ $mahasiswa['nim'] }}" readonly>
+                <input type="text" class="form-control mb-2" value="{{ $mahasiswa['nama'] }}" readonly>
+                <input type="text" class="form-control mb-2" value="{{ $mahasiswa['jurusan'] }}" readonly>
+                <input type="text" class="form-control mb-2" value="{{ $mahasiswa['program'] }}" readonly>
+                <input type="text" class="form-control mb-2" value="{{ $mahasiswa['dosen'] }}" readonly>
+            </div>
+        @endif
     </div>
+</div>
 
-    {{-- Keterangan Merah --}}
-    <div class="alert alert-danger">
-        <ul class="mb-0">
-            <li>Fitur ini digunakan untuk menampilkan dan mengelola KRS per mahasiswa</li>
-            <li>Cek data di PDDIKTI link: <a href="#" class="text-white"><u>PDDIKTI Kemdikbud</u></a></li>
-            <li>Pastikan setiap semesternya data terdapat di PDDIKTI</li>
-        </ul>
-    </div>
+{{-- Keterangan Merah (selalu tampil) --}}
+<div class="alert alert-danger">
+    <ul class="mb-0">
+        <li>Fitur ini digunakan untuk menampilkan dan mengelola KRS per mahasiswa</li>
+        <li>Cek data di PDDIKTI link: <a href="#" class="text-white"><u>PDDIKTI Kemdikbud</u></a></li>
+        <li>Pastikan setiap semesternya data terdapat di PDDIKTI</li>
+    </ul>
+</div>
 
-    {{-- Kuesioner Biru --}}
-    <div class="alert alert-info">
-        <strong>Kuesioner :</strong> Bagi seluruh mahasiswa Universitas Tadulako, diharapkan untuk mengisi
-        kuesioner survey kepuasan mahasiswa atas layanan Universitas Tadulako. <br>
-        Link: <a href="#" class="text-dark"><u>Link Kuesioner</u></a>
-    </div>
+{{-- Kuesioner Biru (selalu tampil) --}}
+<div class="alert alert-info">
+    <strong>Kuesioner :</strong> Bagi seluruh mahasiswa Universitas Tadulako, diharapkan untuk mengisi
+    kuesioner survey kepuasan mahasiswa atas layanan Universitas Tadulako. <br>
+    Link: <a href="#" class="text-dark"><u>Link Kuesioner</u></a>
+</div>
+
+{{-- Tampilkan KRS hanya jika ada pencarian --}}
+@if(request('semester') && isset($matakuliah) && count($matakuliah) > 0)
 
     {{-- Tombol Cetak --}}
     <div class="mb-3">
@@ -126,4 +131,6 @@
             <button class="btn btn-secondary">Refresh SKS MAX</button>
         </div>
     </div>
+
+@endif
 @endsection

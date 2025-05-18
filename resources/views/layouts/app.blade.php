@@ -25,23 +25,34 @@
 <body>
 
     {{-- Navbar --}}
-    <nav class="navbar navbar-expand-lg navbar-custom px-4">
-    <div class="container-fluid">
-        <span class="navbar-brand">SIAKAD</span>
-        <div class="ms-auto dropdown">
-            <a class="d-flex align-items-center text-decoration-none dropdown-toggle" href="#" id="userDropdown" role="button" data-bs-toggle="dropdown" aria-expanded="false">
-                <img src="path/to/user-image.jpg" alt="User Image" width="32" height="32" class="rounded-circle">
-                <strong class="ms-2">SYAHRIL FITRAWAN ABADI</strong>
-            </a>
-            <ul class="dropdown-menu dropdown-menu-end" aria-labelledby="userDropdown">
-                <li><a class="dropdown-item" href="profile">Profil</a></li>
-                <li><hr class="dropdown-divider"></li>
-                <li><a class="dropdown-item" href="logout">Logout</a></li>
-            </ul>
-        </div>
-    </div>
-</nav>
+    @php
+        use Illuminate\Support\Facades\Auth;
+        $user = Auth::user();
+    @endphp
 
+    <nav class="navbar navbar-expand-lg navbar-custom px-4">
+        <div class="container-fluid">
+            <span class="navbar-brand">SIAKAD</span>
+            @if ($user)
+            <div class="ms-auto dropdown">
+                <a class="d-flex align-items-center text-decoration-none dropdown-toggle" href="#" id="userDropdown" role="button" data-bs-toggle="dropdown" aria-expanded="false">
+                    <img src="{{ asset('images/default-user.png') }}" alt="User Image" width="32" height="32" class="rounded-circle">
+                    <strong class="ms-2">{{ $user->name }}</strong>
+                </a>
+                <ul class="dropdown-menu dropdown-menu-end" aria-labelledby="userDropdown">
+                    <li><a class="dropdown-item" href="{{ url('profile') }}">Profil</a></li>
+                    <li><hr class="dropdown-divider"></li>
+                    <li>
+                        <form action="{{ route('logout') }}" method="POST">
+                            @csrf
+                            <button class="dropdown-item" type="submit">Logout</button>
+                        </form>
+                    </li>
+                </ul>
+            </div>
+            @endif
+        </div>
+    </nav>
 
     {{-- Content --}}
     <div class="container mt-4">
