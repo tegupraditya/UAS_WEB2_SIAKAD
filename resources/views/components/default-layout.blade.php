@@ -16,7 +16,11 @@
         <header x-data="{ open: false }"
             class="flex items-center justify-between sm:justify-start gap-8 bg-white border-b border-zinc-300 sticky top-0 px-3 sm:px-8 py-4">
             
-            <h2 class="text-lg sm:text-xl font-bold ">SIAKAD</h2>
+            <h2 class="text-lg sm:text-xl font-bold">
+                <a href="{{ route('dashboard') }}" class="hover:underline">
+                    SIAKAD
+                </a>
+            </h2>
             {{-- desktop navigation --}}
             <nav>
                 <ul class="hidden sm:flex">

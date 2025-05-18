@@ -4,7 +4,7 @@
 
 @section('content')
 {{-- Breadcrumb --}}
-<nav aria-label="breadcrumb">
+<nav aria-label="breadcrumb" class="mb-3">
     <ol class="breadcrumb bg-white px-0">
         <li class="breadcrumb-item"><a href="dashboard">Dashboard</a></li>
         <li class="breadcrumb-item dropdown">
@@ -34,7 +34,7 @@
             </div>
         </form>
 
-        {{-- Tampilkan biodata mahasiswa selalu --}}
+        {{-- Tampilkan biodata mahasiswa --}}
         @if(isset($mahasiswa))
             <div class="mt-4">
                 <input type="text" class="form-control mb-2" value="{{ $mahasiswa['nim'] }}" readonly>
@@ -47,42 +47,24 @@
     </div>
 </div>
 
-{{-- Keterangan Merah (selalu tampil) --}}
-<div class="alert alert-danger">
-    <ul class="mb-0">
-        <li>Fitur ini digunakan untuk menampilkan dan mengelola KRS per mahasiswa</li>
-        <li>Cek data di PDDIKTI link: <a href="#" class="text-white"><u>PDDIKTI Kemdikbud</u></a></li>
-        <li>Pastikan setiap semesternya data terdapat di PDDIKTI</li>
-    </ul>
-</div>
-
-{{-- Kuesioner Biru (selalu tampil) --}}
-<div class="alert alert-info">
-    <strong>Kuesioner :</strong> Bagi seluruh mahasiswa Universitas Tadulako, diharapkan untuk mengisi
-    kuesioner survey kepuasan mahasiswa atas layanan Universitas Tadulako. <br>
-    Link: <a href="#" class="text-dark"><u>Link Kuesioner</u></a>
-</div>
-
-{{-- Tampilkan KRS hanya jika ada pencarian --}}
-@if(request('semester') && isset($matakuliah) && count($matakuliah) > 0)
-
-    {{-- Tombol Cetak --}}
-    <div class="mb-3">
+{{-- Tombol Aksi --}}
+@if(request('semester') && isset($mahasiswa))
+    <div class="mb-3 mt-3">
         <button class="btn btn-info">Cetak KRS</button>
-        <button class="btn btn-success">Cetak Kartu Ujian</button>
-        <button class="btn btn-danger">Cetak Transkrip</button>
-        <button class="btn btn-dark">Cek Data</button>
+        <a href="{{ route('mahasiswa.krs.create', ['semester' => request('semester')]) }}" class="btn btn-warning">+ Tambah Mata Kuliah</a>
     </div>
+@endif
 
-    {{-- Tabel KRS --}}
-    <div class="card">
-        <div class="card-header bg-secondary text-white">Kartu Rencana Studi</div>
+{{-- Tabel KRS --}}
+@if($krsTerpilih && $krsTerpilih->count() > 0)
+    <div class="card mt-4">
+        <div class="card-header bg-secondary text-white">Kartu Rencana Studi Anda</div>
         <div class="card-body p-0">
             <table class="table table-bordered mb-0 table-sm">
                 <thead class="table-light text-center">
                     <tr>
                         <th>#</th>
-                        <th>KodeMK</th>
+                        <th>Kode MK</th>
                         <th>Mata Kuliah</th>
                         <th>SKS</th>
                         <th>Dosen</th>
@@ -93,27 +75,26 @@
                         <th>Kelas</th>
                         <th>Pernah Ambil</th>
                         <th>Kehadiran</th>
-                        <th>Tgl Input</th>
                         <th>Validasi</th>
                     </tr>
                 </thead>
                 <tbody>
-                    @foreach ($matakuliah as $index => $mk)
+                    @foreach ($krsTerpilih as $index => $krs)
+                    @php $mk = $krs->matakuliah; @endphp
                     <tr>
                         <td>{{ $index + 1 }}</td>
-                        <td>{{ $mk['kode'] }}</td>
-                        <td>{{ $mk['nama'] }}</td>
-                        <td>{{ $mk['sks'] }}</td>
-                        <td>{{ $mk['dosen'] }}</td>
-                        <td>{{ $mk['hari'] }}</td>
-                        <td>{{ $mk['mulai'] }}</td>
-                        <td>{{ $mk['selesai'] }}</td>
-                        <td>{{ $mk['ruang'] }}</td>
-                        <td>{{ $mk['kelas'] }}</td>
-                        <td>{{ $mk['pernah_ambil'] }}</td>
-                        <td class="text-danger">{{ number_format($mk['kehadiran'], 2) }}</td>
-                        <td>{{ $mk['tgl_input'] }}</td>
-                        <td class="text-success">{{ $mk['validasi'] }}</td>
+                        <td>{{ $mk->kode_mk }}</td>
+                        <td>{{ $mk->nama }}</td>
+                        <td>{{ $mk->sks }}</td>
+                        <td>{{ $mk->dosen }}</td>
+                        <td>{{ $mk->hari }}</td>
+                        <td>{{ $mk->jam_mulai }}</td>
+                        <td>{{ $mk->jam_selesai }}</td>
+                        <td>{{ $mk->ruang }}</td>
+                        <td>{{ $mk->kelas }}</td>
+                        <td>{{ $krs->pernah_ambil ?? '-' }}</td>
+                        <td class="text-danger">{{ number_format($krs->kehadiran ?? 0, 2) }}</td>
+                        <td class="text-success">{{ $krs->validasi ?? '-' }}</td>
                     </tr>
                     @endforeach
                 </tbody>
@@ -121,16 +102,15 @@
         </div>
     </div>
 
-    {{-- Footer Table --}}
+    {{-- Footer Tabel --}}
     <div class="d-flex justify-content-between mt-3">
         <div>
-            <span><strong>Total SKS yang diambil      :</strong> {{ $total_sks }}</span><br>
+            <span><strong>Total SKS yang diambil :</strong> {{ $total_sks }}</span><br>
             <span><strong>Maximum SKS yg boleh diambil:</strong> 24</span>
         </div>
         <div>
             <button class="btn btn-secondary">Refresh SKS MAX</button>
         </div>
     </div>
-
 @endif
 @endsection

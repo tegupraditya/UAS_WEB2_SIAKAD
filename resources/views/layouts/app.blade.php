@@ -10,14 +10,14 @@
             background-color: #f8f9fa;
         }
         .navbar-custom {
-            background-color: #e91e63;
+            background-color: #02709b;
             color: white;
         }
         .navbar-custom a {
             color: white;
         }
         .card-header-custom {
-            background-color: #e91e63;
+            background-color: #02709b;
             color: white;
         }
     </style>
