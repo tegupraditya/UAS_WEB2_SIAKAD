@@ -64,8 +64,8 @@
                     <td>{{ $mk->sks }}</td>
                     <td>{{ $mk->dosen }}</td>
                     <td>{{ $mk->hari }}</td>
-                    <td>{{ $mk->mulai }}</td>
-                    <td>{{ $mk->selesai }}</td>
+                    <td>{{ $mk->jam_mulai }}</td>
+                    <td>{{ $mk->jam_selesai }}</td>
                     <td>{{ $mk->ruang }}</td>
                     <td>{{ $mk->kelas }}</td>
                     <td>
