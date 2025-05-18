@@ -46,6 +46,9 @@
                 <th>Nama</th>
                 <th>NIM</th>
                 <th>Email</th>
+                <th>Jurusan</th>
+                <th>Program</th>
+                <th>Dosen Wali</th>
                 <th>Aksi</th>
             </tr>
         </thead>
@@ -55,6 +58,9 @@
                     <td>{{ $mhs->name }}</td>
                     <td>{{ $mhs->nim }}</td>
                     <td>{{ $mhs->email }}</td>
+                    <td>{{ $mhs->jurusan }}</td>
+                    <td>{{ $mhs->program }}</td>
+                    <td>{{ $mhs->dosen_pembimbing }}</td>
                     <td>
                         <a href="{{ route('admin.mahasiswa.edit', $mhs->id) }}" class="btn btn-warning btn-sm">Edit</a>
                         <form action="{{ route('admin.mahasiswa.destroy', $mhs->id) }}" method="POST" class="d-inline" onsubmit="return confirm('Yakin ingin menghapus?')">

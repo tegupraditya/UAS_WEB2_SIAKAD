@@ -24,26 +24,50 @@
 {{-- Form Pencarian --}}
 <div class="card mb-4">
     <div class="card-body">
-        <form class="row g-3" method="GET" action="{{ route('mahasiswa.krs.index') }}">
-            <div class="col-md-2">
-                <label>Semester Akademik</label>
-                <input type="text" name="semester" class="form-control" value="{{ request('semester') }}" placeholder="cth: 20242">
+        <form class="row mb-2" method="GET" action="{{ route('mahasiswa.krs.index') }}">
+            <label for="semester" class="col-sm-2 col-form-label ">Semester Akademik</label>
+            <div class="col-sm-4">
+                <input type="text" name="semester" id="semester" class="form-control" value="{{ request('semester') }}" placeholder="cth: 20242">
             </div>
-            <div class="col-md-2 align-self-end">
-                <button class="btn btn-danger">Search</button>
+            <div class="col-sm-2">
+                <button type="submit" class="btn btn-danger">Search</button>
             </div>
         </form>
 
         {{-- Tampilkan biodata mahasiswa --}}
         @if(isset($mahasiswa))
-            <div class="mt-4">
-                <input type="text" class="form-control mb-2" value="{{ $mahasiswa['nim'] }}" readonly>
-                <input type="text" class="form-control mb-2" value="{{ $mahasiswa['nama'] }}" readonly>
-                <input type="text" class="form-control mb-2" value="{{ $mahasiswa['jurusan'] }}" readonly>
-                <input type="text" class="form-control mb-2" value="{{ $mahasiswa['program'] }}" readonly>
-                <input type="text" class="form-control mb-2" value="{{ $mahasiswa['dosen'] }}" readonly>
+            <div class="row mb-2">
+                <label class="col-sm-2 col-form-label">NIM</label>
+                <div class="col-sm-4">
+                    <input type="text" class="form-control" value="{{ $mahasiswa['nim'] }}" readonly>
+                </div>
+            </div>
+            <div class="row mb-2">
+                <label class="col-sm-2 col-form-label">Nama</label>
+                <div class="col-sm-4">
+                    <input type="text" class="form-control" value="{{ $mahasiswa['nama'] }}" readonly>
+                </div>
+            </div>
+            <div class="row mb-2">
+                <label class="col-sm-2 col-form-label">Jurusan</label>
+                <div class="col-sm-4">
+                    <input type="text" class="form-control" value="{{ $mahasiswa['jurusan'] }}" readonly>
+                </div>
+            </div>
+            <div class="row mb-2">
+                <label class="col-sm-2 col-form-label">Program</label>
+                <div class="col-sm-4">
+                    <input type="text" class="form-control" value="{{ $mahasiswa['program'] }}" readonly>
+                </div>
+            </div>
+            <div class="row mb-2">
+                <label class="col-sm-2 col-form-label">Dosen Wali</label>
+                <div class="col-sm-4">
+                    <input type="text" class="form-control" value="{{ $mahasiswa['dosen'] }}" readonly>
+                </div>
             </div>
         @endif
+
     </div>
 </div>
 

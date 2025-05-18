@@ -26,6 +26,20 @@
         </div>
 
         <div class="mb-3">
+            <label for="jurusan" class="form-label">Jurusan</label>
+            <input type="text" class="form-control" name="jurusan" id="jurusan" value="{{ old('jurusan', $mahasiswa->jurusan) }}" required>
+        </div>
+        
+        <div class="mb-3">
+            <label for="program" class="form-label">Program</label>
+            <input type="text" class="form-control" name="program" id="program" value="{{ old('program', $mahasiswa->program) }}" required>
+        </div>
+
+        <div class="mb-3">
+            <label for="dosen_pembimbing" class="form-label">Dosen Wali</label>
+            <input type="text" class="form-control" name="dosen_pembimbing" id="dosen_pembimbing" value="{{ old('dosen_pembimbing', $mahasiswa->dosen_pembimbing) }}" required>
+        </div>
+        <div class="mb-3">
             <label for="password" class="form-label">Password (kosongkan jika tidak diganti)</label>
             <input type="password" class="form-control" name="password" id="password">
         </div>

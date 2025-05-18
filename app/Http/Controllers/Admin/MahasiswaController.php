@@ -35,6 +35,9 @@ class MahasiswaController extends Controller
             'email' => 'required|email|unique:users,email',
             'password' => 'required|min:6',
             'nim' => 'required|unique:users,nim',
+            'jurusan' => 'required|string|max:255',
+            'program' => 'required|string|max:255',
+            'dosen_pembimbing' => 'required|string|max:255',
         ]);
 
         User::create([
@@ -43,6 +46,9 @@ class MahasiswaController extends Controller
             'password' => bcrypt($request->password),
             'role' => 'mahasiswa',
             'nim' => $request->nim,
+            'jurusan' => $request->jurusan,
+            'program' => $request->program,
+            'dosen_pembimbing' => $request->dosen_pembimbing,
         ]);
 
         return redirect()->route('admin.mahasiswa.index')->with('success', 'Akun mahasiswa berhasil ditambahkan.');
@@ -69,12 +75,19 @@ class MahasiswaController extends Controller
             'email' => 'required|email|unique:users,email,' . $mahasiswa->id,
             'nim' => 'required|unique:users,nim,' . $mahasiswa->id,
             'password' => 'nullable|min:6',
+            'jurusan' => 'required|string|max:255',
+            'program' => 'required|string|max:255',
+            'dosen_pembimbing' => 'required|string|max:255',
+            
         ]);
 
         $mahasiswa->update([
             'name' => $request->nama,
             'email' => $request->email,
             'nim' => $request->nim,
+            'jurusan' => $request->jurusan,
+            'program' => $request->program,
+            'dosen_pembimbing' => $request->dosen_pembimbing,
             'password' => $request->password ? bcrypt($request->password) : $mahasiswa->password,
         ]);
 
