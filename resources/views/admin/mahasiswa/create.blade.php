@@ -34,6 +34,14 @@
         </div>
 
         <div class="mb-3">
+            <label for="jurusan" class="form-label">Jurusan</label>
+            <input type="text" class="form-control @error('jurusan') is-invalid @enderror" name="jurusan" id="jurusan" value="{{ old('jurusan') }}" required>
+            @error('jurusan')
+                <div class="invalid-feedback">{{ $message }}</div>
+            @enderror
+        </div>
+
+        <div class="mb-3">
             <label for="password" class="form-label">Password</label>
             <input type="password" class="form-control @error('password') is-invalid @enderror" name="password" id="password" required>
             @error('password')
