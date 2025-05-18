@@ -6,19 +6,33 @@
     <title>@yield('title', 'SIAKAD - KRS')</title>
     <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.0/dist/css/bootstrap.min.css" rel="stylesheet">
     <style>
+        html, body {
+            height: 100%;
+            margin: 0;
+        }
+
         body {
+            display: flex;
+            flex-direction: column;
             background-color: #f8f9fa;
         }
+
         .navbar-custom {
             background-color: #02709b;
             color: white;
         }
+
         .navbar-custom a {
             color: white;
         }
+
         .card-header-custom {
             background-color: #02709b;
             color: white;
+        }
+
+        .main-content {
+            flex: 1;
         }
     </style>
 </head>
@@ -55,12 +69,12 @@
     </nav>
 
     {{-- Content --}}
-    <div class="container mt-4">
+    <div class="container mt-4 main-content">
         @yield('content')
     </div>
 
     {{-- Footer --}}
-    <footer class="text-center mt-5 mb-3 text-muted small">
+    <footer class="text-center mt-auto mb-3 text-muted small">
         Copyright © {{ date('Y') }} UPA TIK. Universitas Tadulako. | Version - 3.0.0
     </footer>
 
