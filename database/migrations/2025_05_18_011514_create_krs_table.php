@@ -13,7 +13,7 @@ return new class extends Migration
     {
         Schema::create('krs', function (Blueprint $table) {
         $table->id();
-        $table->foreignId('mahasiswa_id')->constrained()->onDelete('cascade');
+        $table->foreignId('mahasiswa_id')->constrained('users')->onDelete('cascade');
         $table->string('semester');
         $table->string('kode');
         $table->string('nama');
