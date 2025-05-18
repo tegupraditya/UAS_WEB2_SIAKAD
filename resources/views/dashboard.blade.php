@@ -58,20 +58,15 @@
 
 {{-- Konten Utama Berdasarkan Role --}}
 <div class="container mt-3">
-    <h2>Selamat Datang, {{ $user->name }}</h2>
-    <p>Anda login sebagai <strong>{{ ucfirst($role) }}</strong></p>
-
     @if ($role === 'admin')
         <div class="alert alert-primary">Ini adalah panel dashboard untuk <strong>Admin</strong>.</div>
-        {{-- Bisa tambah tombol atau shortcut cepat ke fitur admin di sini
-        <div class="list-group">
-            <a href="{{ route('admin.mata-kuliah.index') }}" class="list-group-item list-group-item-action">Kelola Mata Kuliah</a>
-            <a href="{{ route('admin.akun.index') }}" class="list-group-item list-group-item-action">Kelola Akun Mahasiswa & Dosen</a>
-            <a href="{{ route('admin.semester.index') }}" class="list-group-item list-group-item-action">Kelola Semester Aktif</a>
-        </div> --}}
     @elseif ($role === 'dosen')
-        <div class="alert alert-success">Ini adalah panel dashboard untuk <strong>Dosen</strong>.</div>
+    <h2>Selamat Datang, {{ $user->name }}</h2>
+    <p>Anda login sebagai <strong>{{ ucfirst($role) }}</strong></p></div>
+        <div class="alert alert-success">Ini adalah panel dashboard untuk <strong>Dosen</strong>.
     @elseif ($role === 'mahasiswa')
+    <h2>Selamat Datang, {{ $user->name }}</h2>
+    <p>Anda login sebagai <strong>{{ ucfirst($role) }}</strong>
         <div class="alert alert-info">Ini adalah panel dashboard untuk <strong>Mahasiswa</strong>.</div>
     @else
         <div class="alert alert-danger">Role tidak dikenali.</div>
