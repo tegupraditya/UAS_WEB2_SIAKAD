@@ -19,6 +19,7 @@
         </li>
         @endif
 
+        {{-- Tampilkan submenu hanya untuk dosen --}}
         @if ($role === 'dosen')
         <li class="breadcrumb-item dropdown">
             <a class="dropdown-toggle text-decoration-none" href="#" id="dosenDropdown" role="button" data-bs-toggle="dropdown" aria-expanded="false">
@@ -26,7 +27,29 @@
             </a>
             <ul class="dropdown-menu" aria-labelledby="dosenDropdown">
                 <li><a class="dropdown-item" href="{{ url('jadwal') }}">Jadwal Mata Kuliah</a></li>
-                <li><a class="dropdown-item" href="{{ url('Absensi') }}">Absensi</a></li>
+                <li><a class="dropdown-item" href="{{ url('absensi') }}">Absensi</a></li>
+            </ul>
+        </li>
+        @endif
+
+        {{-- Tambahkan submenu admin --}}
+        @if ($role === 'admin')
+        <li class="breadcrumb-item dropdown">
+            <a class="dropdown-toggle text-decoration-none" href="#" id="adminDropdown" role="button" data-bs-toggle="dropdown" aria-expanded="false">
+                Admin
+            </a>
+            <ul class="dropdown-menu" aria-labelledby="adminDropdown">
+                <li><a class="dropdown-item" href="{{ route('admin.mata-kuliah.index') }}">Mata Kuliah</a></li>
+            </ul>
+        </li>
+
+        <li class="breadcrumb-item dropdown">
+            <a class="dropdown-toggle text-decoration-none" href="#" id="akunDropdown" role="button" data-bs-toggle="dropdown" aria-expanded="false">
+                Kelola Akun
+            </a>
+            <ul class="dropdown-menu" aria-labelledby="akunDropdown">
+                <li><a class="dropdown-item" href="{{ route('admin.mahasiswa.index') }}">Mahasiswa</a></li>
+                <li><a class="dropdown-item" href="{{ route('admin.dosen.index') }}">Dosen</a></li>
             </ul>
         </li>
         @endif
@@ -40,6 +63,12 @@
 
     @if ($role === 'admin')
         <div class="alert alert-primary">Ini adalah panel dashboard untuk <strong>Admin</strong>.</div>
+        {{-- Bisa tambah tombol atau shortcut cepat ke fitur admin di sini
+        <div class="list-group">
+            <a href="{{ route('admin.mata-kuliah.index') }}" class="list-group-item list-group-item-action">Kelola Mata Kuliah</a>
+            <a href="{{ route('admin.akun.index') }}" class="list-group-item list-group-item-action">Kelola Akun Mahasiswa & Dosen</a>
+            <a href="{{ route('admin.semester.index') }}" class="list-group-item list-group-item-action">Kelola Semester Aktif</a>
+        </div> --}}
     @elseif ($role === 'dosen')
         <div class="alert alert-success">Ini adalah panel dashboard untuk <strong>Dosen</strong>.</div>
     @elseif ($role === 'mahasiswa')
@@ -48,4 +77,4 @@
         <div class="alert alert-danger">Role tidak dikenali.</div>
     @endif
 </div>
-@endsection     
+@endsection

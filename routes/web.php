@@ -37,5 +37,33 @@ Route::middleware('auth')->group(function () {
 use App\Http\Controllers\KrsController;
 use App\Http\Controllers\KhsController;
 
-Route::get('/krs', [KrsController::class, 'index'])->name('krs.index');
-Route::get('/khs', [KhsController::class, 'index'])->name('khs.index');
+Route::get('/krs', [KrsController::class, 'index'])->name('mahasiswa.krs.index');
+Route::get('/khs', [KhsController::class, 'index'])->name('mahasiswa.khs.index');
+
+// use App\Http\Controllers\Admin\MataKuliahController;
+
+// Route::middleware(['auth', 'admin'])->prefix('admin')->name('admin.')->group(function () {
+//     Route::resource('mata-kuliah', MataKuliahController::class);
+// });
+
+use App\Http\Controllers\Admin\MataKuliahController;
+use App\Http\Middleware\AdminMiddleware;
+
+Route::middleware(['auth', AdminMiddleware::class])
+    ->prefix('admin')
+    ->name('admin.')
+    ->group(function () {
+        Route::resource('mata-kuliah', MataKuliahController::class);
+        Route::resource('/mahasiswa', App\Http\Controllers\Admin\MahasiswaController::class);
+        Route::resource('admin/mahasiswa', \App\Http\Controllers\Admin\MahasiswaController::class)->names('mahasiswa');
+        Route::resource('dosen', App\Http\Controllers\Admin\DosenController::class);
+    });
+
+
+
+
+
+
+    
+
+

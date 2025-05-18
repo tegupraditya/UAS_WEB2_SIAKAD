@@ -47,6 +47,6 @@ class KrsController extends Controller
             $total_sks = collect($matakuliah)->sum('sks');
         }
 
-        return view('krs.index', compact('mahasiswa', 'matakuliah', 'total_sks', 'semesterInput'));
+        return view('mahasiswa.krs.index', compact('mahasiswa', 'matakuliah', 'total_sks', 'semesterInput'));
     }
 }

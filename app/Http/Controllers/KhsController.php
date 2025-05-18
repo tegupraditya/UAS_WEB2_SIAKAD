@@ -8,6 +8,6 @@ class KhsController extends Controller
 {
     public function index()
     {
-        return view('khs.index');
+        return view('mahasiswa.khs.index');
     }
 }

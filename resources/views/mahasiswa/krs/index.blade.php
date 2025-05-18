@@ -24,7 +24,7 @@
 {{-- Form Pencarian --}}
 <div class="card mb-4">
     <div class="card-body">
-        <form class="row g-3" method="GET" action="{{ route('krs.index') }}">
+        <form class="row g-3" method="GET" action="{{ route('mahasiswa.krs.index') }}">
             <div class="col-md-2">
                 <label>Semester Akademik</label>
                 <input type="text" name="semester" class="form-control" value="{{ request('semester') }}" placeholder="cth: 20242">
