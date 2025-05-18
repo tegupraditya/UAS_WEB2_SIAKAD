@@ -42,6 +42,6 @@ class Krs extends Model
     // dengan foreign key kode_mk pada krs dan primary key kode pada mata_kuliah
     public function mataKuliah()
     {
-        return $this->belongsTo(MataKuliah::class, 'kode_mk', 'kode_mkgit');
+        return $this->belongsTo(MataKuliah::class, 'kode_mk', 'kode_mk');
     }
 }
