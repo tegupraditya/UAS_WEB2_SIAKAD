@@ -65,6 +65,11 @@
             <input type="text" class="form-control" id="kelas" name="kelas" value="{{ old('kelas', $mataKuliah->kelas) }}">
         </div>
 
+        <div class="mb-3">
+            <label for="semester" class="form-label">Semester</label>
+            <input type="text" class="form-control" id="semester" name="semester" value="{{ old('semester', $mataKuliah->semester) }}">
+        </div>
+
         <button type="submit" class="btn btn-primary">Update</button>
         <a href="{{ route('admin.mata-kuliah.index') }}" class="btn btn-secondary">Batal</a>
     </form>

@@ -19,6 +19,7 @@ class MataKuliah extends Model
         'jam_selesai',
         'ruang',
         'kelas',
+        'semester',
     ];
 }
 

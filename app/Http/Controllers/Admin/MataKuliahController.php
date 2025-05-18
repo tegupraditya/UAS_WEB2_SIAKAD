@@ -31,6 +31,8 @@ class MataKuliahController extends Controller
             'jam_selesai' => 'required',
             'ruang' => 'required',
             'kelas' => 'required',
+            'semester' => 'required',
+
         ]);
 
         MataKuliah::create($request->all());
@@ -55,6 +57,7 @@ class MataKuliahController extends Controller
             'jam_selesai' => 'required',
             'ruang' => 'required',
             'kelas' => 'required',
+            'semester' => 'required',
         ]);
 
         $mataKuliah->update($request->all());

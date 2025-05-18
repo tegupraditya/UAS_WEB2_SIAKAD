@@ -9,27 +9,27 @@ class Krs extends Model
 {
     use HasFactory;
 
+    protected $table = 'krs'; // Jika nama tabel bukan plural default (optional)
+
     protected $fillable = [
-        'mahasiswa_id', // FK ke users.id dengan role mahasiswa
+        'mahasiswa_id',   // FK ke users.id dengan role mahasiswa
         'semester',
-        'kode',
+        'kode_mk',        // ganti 'kode' jadi 'kode_mk' supaya konsisten sama kolom di DB dan view
         'nama',
         'sks',
         'dosen',
         'hari',
-        'mulai',
-        'selesai',
+        'jam_mulai',          // ganti 'mulai' jadi 'jam_mulai' agar konsisten dengan view/index blade
+        'jam_selesai',        // ganti 'selesai' jadi 'jam_selesai' agar konsisten dengan view/index blade
         'ruang',
         'kelas',
         'pernah_ambil',
         'kehadiran',
-        'tgl_input',
         'validasi',
     ];
 
     protected $casts = [
         'kehadiran' => 'float',
-        'tgl_input' => 'datetime',
     ];
 
     // Relasi ke User yang bertindak sebagai mahasiswa
@@ -38,15 +38,10 @@ class Krs extends Model
         return $this->belongsTo(User::class, 'mahasiswa_id');
     }
 
-    // Jika kamu punya model Dosen, bisa buat relasi seperti ini:
-    // public function dosen()
-    // {
-    //     return $this->belongsTo(User::class, 'dosen_id'); // misal FK dosen_id
-    // }
-
-    // Jika kamu punya model MataKuliah, bisa buat relasi seperti ini:
-    // public function mataKuliah()
-    // {
-    //     return $this->belongsTo(MataKuliah::class, 'kode', 'kode'); // misal kode sbg FK
-    // }
+    // Relasi opsional ke model MataKuliah, jika kamu ingin akses detail matkul
+    // dengan foreign key kode_mk pada krs dan primary key kode pada mata_kuliah
+    public function mataKuliah()
+    {
+        return $this->belongsTo(MataKuliah::class, 'kode_mk', 'kode_mkgit');
+    }
 }

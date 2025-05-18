@@ -52,6 +52,7 @@
                 <th>Selesai</th>
                 <th>Ruang</th>
                 <th>Kelas</th>
+                <th>Semester</th>
                 <th>Aksi</th>
             </tr>
         </thead>
@@ -68,6 +69,7 @@
                     <td>{{ $mk->jam_selesai }}</td>
                     <td>{{ $mk->ruang }}</td>
                     <td>{{ $mk->kelas }}</td>
+                    <td>{{ $mk->semester }}</td>
                     <td>
                         <a href="{{ route('admin.mata-kuliah.edit', $mk->id) }}" class="btn btn-warning btn-sm">Edit</a>
 

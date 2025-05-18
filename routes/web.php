@@ -39,6 +39,9 @@ use App\Http\Controllers\KhsController;
 
 Route::get('/krs', [KrsController::class, 'index'])->name('mahasiswa.krs.index');
 Route::get('/khs', [KhsController::class, 'index'])->name('mahasiswa.khs.index');
+Route::get('mahasiswa/krs/create', [KrsController::class, 'create'])->name('mahasiswa.krs.create');
+Route::post('mahasiswa/krs', [KrsController::class, 'store'])->name('mahasiswa.krs.store');
+
 
 // use App\Http\Controllers\Admin\MataKuliahController;
 

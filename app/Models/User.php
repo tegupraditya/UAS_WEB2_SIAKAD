@@ -16,7 +16,12 @@ class User extends Authenticatable
         'password',
         'role',
         'nim',   // untuk mahasiswa
-        'nidn',  // untuk dosen
+        'nidn', // untuk dosen
+        'jurusan',
+        'program',
+        'dosen_pembimbing',
+        'semester',
+          
     ];
 
     protected $hidden = [
