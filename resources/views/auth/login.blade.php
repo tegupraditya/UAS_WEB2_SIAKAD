@@ -24,6 +24,7 @@
         <div class="flex flex-col gap-2">
             <label for="role" class="font-semibold text-sm">Login as</label>
             <select name="role" id="role" class="px-3 py-2 border border-zinc-300 bg-slate-50">
+                <option value="">-- Login Sebagai --</option>
                 <option value="mahasiswa">Mahasiswa</option>
                 <option value="dosen">Dosen</option>
                 <option value="admin">Admin</option>

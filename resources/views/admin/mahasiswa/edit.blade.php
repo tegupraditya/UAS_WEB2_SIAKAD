@@ -30,9 +30,13 @@
             <input type="text" class="form-control" name="jurusan" id="jurusan" value="{{ old('jurusan', $mahasiswa->jurusan) }}" required>
         </div>
         
-        <div class="mb-3">
-            <label for="program" class="form-label">Program</label>
-            <input type="text" class="form-control" name="program" id="program" value="{{ old('program', $mahasiswa->program) }}" required>
+       <div class="mb-3">
+            <label for="program" class="form-label">Program Studi</label>
+            <select class="form-control" name="program" id="program" required>
+                <option value="">-- Pilih Program Studi --</option>
+                <option value="S1 Teknik Informatika" {{ old('program', $mahasiswa->program) == 'S1 Teknik Informatika' ? 'selected' : '' }}>S1 Teknik Informatika</option>
+                <option value="S1 Sistem Informasi" {{ old('program', $mahasiswa->program) == 'S1 Sistem Informasi' ? 'selected' : '' }}>S1 Sistem Informasi</option>
+            </select>
         </div>
 
         <div class="mb-3">

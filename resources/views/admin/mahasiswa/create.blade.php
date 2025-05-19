@@ -42,8 +42,12 @@
         </div>
         
         <div class="mb-3">
-            <label for="program" class="form-label">Prodi</label>
-            <input type="text" class="form-control @error('program') is-invalid @enderror" name="program" id="program" value="{{ old('program') }}" required>
+            <label for="program" class="form-label">Program Studi</label>
+            <select class="form-control @error('program') is-invalid @enderror" name="program" id="program" required>
+                <option value="">-- Pilih Program Studi --</option>
+                <option value="S1 Teknik Informatika" {{ old('program') == 'S1 Teknik Informatika' ? 'selected' : '' }}>S1 Teknik Informatika</option>
+                <option value="S1 Sistem Informasi" {{ old('program') == 'S1 Sistem Informasi' ? 'selected' : '' }}>S1 Sistem Informasi</option>
+            </select>
             @error('program')
                 <div class="invalid-feedback">{{ $message }}</div>
             @enderror
