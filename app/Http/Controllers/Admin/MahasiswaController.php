@@ -3,8 +3,11 @@
 namespace App\Http\Controllers\Admin;
 
 use App\Models\User;
+use App\Models\Mahasiswa; // Import model Mahasiswa
+use App\Models\Dosen;     // Import model Dosen
 use App\Http\Controllers\Controller;
 use Illuminate\Http\Request;
+use Illuminate\Support\Facades\DB;
 
 class MahasiswaController extends Controller
 {
@@ -13,7 +16,7 @@ class MahasiswaController extends Controller
      */
     public function index()
     {
-        $mahasiswas = User::where('role', 'mahasiswa')->get();
+        $mahasiswas = Mahasiswa::with('user', 'dosenPembimbing.user')->get();
         return view('admin.mahasiswa.index', compact('mahasiswas'));
     }
 
@@ -22,7 +25,8 @@ class MahasiswaController extends Controller
      */
     public function create()
     {
-        return view('admin.mahasiswa.create');
+        $dosens = Dosen::with('user')->get();
+        return view('admin.mahasiswa.create', compact('dosens'));
     }
 
     /**
@@ -34,74 +38,98 @@ class MahasiswaController extends Controller
             'nama' => 'required|string|max:255',
             'email' => 'required|email|unique:users,email',
             'password' => 'required|min:6',
-            'nim' => 'required|unique:users,nim',
+            'nim' => 'required|unique:mahasiswa,nim',
             'jurusan' => 'required|string|max:255',
             'program' => 'required|string|max:255',
-            'dosen_pembimbing' => 'required|string|max:255',
+            'dosen_pembimbing_id' => 'required|exists:dosen,id',
         ]);
 
-        User::create([
-            'name' => $request->nama,
-            'email' => $request->email,
-            'password' => bcrypt($request->password),
-            'role' => 'mahasiswa',
-            'nim' => $request->nim,
-            'jurusan' => $request->jurusan,
-            'program' => $request->program,
-            'dosen_pembimbing' => $request->dosen_pembimbing,
-        ]);
+        DB::beginTransaction();
+        try {
+            $user = User::create([
+                'name' => $request->nama,
+                'email' => $request->email,
+                'password' => bcrypt($request->password),
+                'role' => 'mahasiswa',
+            ]);
 
-        return redirect()->route('admin.mahasiswa.index')->with('success', 'Akun mahasiswa berhasil ditambahkan.');
+            Mahasiswa::create([
+                'user_id' => $user->id,
+                'nim' => $request->nim,
+                'jurusan' => $request->jurusan,
+                'program' => $request->program,
+                'dosen_pembimbing_id' => $request->dosen_pembimbing_id,
+            ]);
+
+            DB::commit();
+            return redirect()->route('admin.mahasiswa.index')->with('success', 'Akun mahasiswa berhasil ditambahkan.');
+        } catch (\Exception $e) {
+            DB::rollBack();
+            return redirect()->back()->withInput()->withErrors(['error' => 'Gagal menambahkan akun mahasiswa: ' . $e->getMessage()]);
+        }
     }
 
     /**
      * Show the form for editing the specified resource.
      */
-    public function edit($id)
+    public function edit(Mahasiswa $mahasiswa)
     {
-        $mahasiswa = User::findOrFail($id);
-        return view('admin.mahasiswa.edit', compact('mahasiswa'));
+        $mahasiswa->load('user', 'dosenPembimbing.user');
+        $dosens = Dosen::with('user')->get();
+        return view('admin.mahasiswa.edit', compact('mahasiswa', 'dosens'));
     }
 
     /**
      * Update the specified resource in storage.
      */
-    public function update(Request $request, $id)
+    public function update(Request $request, Mahasiswa $mahasiswa)
     {
-        $mahasiswa = User::findOrFail($id);
-
         $request->validate([
             'nama' => 'required|string|max:255',
-            'email' => 'required|email|unique:users,email,' . $mahasiswa->id,
-            'nim' => 'required|unique:users,nim,' . $mahasiswa->id,
+            'email' => 'required|email|unique:users,email,' . $mahasiswa->user->id,
+            'nim' => 'required|unique:mahasiswa,nim,' . $mahasiswa->id,
             'password' => 'nullable|min:6',
             'jurusan' => 'required|string|max:255',
             'program' => 'required|string|max:255',
-            'dosen_pembimbing' => 'required|string|max:255',
-            
+            'dosen_pembimbing_id' => 'required|exists:dosen,id',
         ]);
 
-        $mahasiswa->update([
-            'name' => $request->nama,
-            'email' => $request->email,
-            'nim' => $request->nim,
-            'jurusan' => $request->jurusan,
-            'program' => $request->program,
-            'dosen_pembimbing' => $request->dosen_pembimbing,
-            'password' => $request->password ? bcrypt($request->password) : $mahasiswa->password,
-        ]);
+        DB::beginTransaction();
+        try {
+            $mahasiswa->user->update([
+                'name' => $request->nama,
+                'email' => $request->email,
+                'password' => $request->password ? bcrypt($request->password) : $mahasiswa->user->password,
+            ]);
 
-        return redirect()->route('admin.mahasiswa.index')->with('success', 'Data mahasiswa berhasil diperbarui.');
+            $mahasiswa->update([
+                'nim' => $request->nim,
+                'jurusan' => $request->jurusan,
+                'program' => $request->program,
+                'dosen_pembimbing_id' => $request->dosen_pembimbing_id,
+            ]);
+
+            DB::commit();
+            return redirect()->route('admin.mahasiswa.index')->with('success', 'Data mahasiswa berhasil diperbarui.');
+        } catch (\Exception $e) {
+            DB::rollBack();
+            return redirect()->back()->withInput()->withErrors(['error' => 'Gagal memperbarui data mahasiswa: ' . $e->getMessage()]);
+        }
     }
 
     /**
      * Remove the specified resource from storage.
      */
-    public function destroy($id)
+    public function destroy(Mahasiswa $mahasiswa)
     {
-        $mahasiswa = User::findOrFail($id);
-        $mahasiswa->delete();
-
-        return redirect()->route('admin.mahasiswa.index')->with('success', 'Akun mahasiswa berhasil dihapus.');
+        DB::beginTransaction();
+        try {
+            $mahasiswa->user->delete();
+            DB::commit();
+            return redirect()->route('admin.mahasiswa.index')->with('success', 'Akun mahasiswa berhasil dihapus.');
+        } catch (\Exception $e) {
+            DB::rollBack();
+            return redirect()->back()->withErrors(['error' => 'Gagal menghapus akun mahasiswa: ' . $e->getMessage()]);
+        }
     }
 }

@@ -9,23 +9,23 @@ class Khs extends Model
 {
     use HasFactory;
 
+    protected $table = 'khs';
+
     protected $fillable = [
         'mahasiswa_id',
         'mata_kuliah_id',
-        'nilai',
         'semester',
+        'nilai_akhir',
+        'grade',
     ];
 
-    // Relasi ke User (mahasiswa)
     public function mahasiswa()
     {
-        return $this->belongsTo(User::class, 'mahasiswa_id');
+        return $this->belongsTo(Mahasiswa::class);
     }
 
-    // Relasi ke MataKuliah
     public function mataKuliah()
     {
-        return $this->belongsTo(MataKuliah::class, 'mata_kuliah_id');
+        return $this->belongsTo(MataKuliah::class);
     }
 }
-        

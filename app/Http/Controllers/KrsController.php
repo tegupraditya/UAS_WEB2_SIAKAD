@@ -4,7 +4,7 @@ namespace App\Http\Controllers;
 
 use Illuminate\Http\Request;
 use App\Models\MataKuliah;
-use App\Models\Krs;          // model KRS
+use App\Models\Krs;         // model KRS
 use Illuminate\Support\Facades\Auth;
 
 class KrsController extends Controller
@@ -18,14 +18,15 @@ class KrsController extends Controller
             abort(403, 'Unauthorized');
         }
 
-        // Biodata mahasiswa
+        // Biodata mahasiswa (gunakan relasi jika sudah diatur di model User)
+        $mahasiswaData = $user->mahasiswa;
         $mahasiswa = [
             'semester' => '20242', // sementara static, bisa sesuaikan
-            'nim' => $user->nim,
+            'nim' => $mahasiswaData->nim ?? '-',
             'nama' => $user->name,
-            'jurusan' => $user->jurusan ?? '-',
-            'program' => $user->program ?? '-',
-            'dosen' => $user->dosen_pembimbing ?? '-'
+            'jurusan' => $mahasiswaData->jurusan ?? '-',
+            'program' => $mahasiswaData->program ?? '-',
+            'dosen' => $mahasiswaData->dosenPembimbing->user->name ?? '-' // akses melalui relasi
         ];
 
         $matakuliah = collect();
@@ -37,14 +38,14 @@ class KrsController extends Controller
             $matakuliah = MataKuliah::where('semester', $semesterInput)->get();
 
             // Ambil matakuliah KRS yang sudah diambil mahasiswa (relasi dengan matakuliah)
-            $krsTerpilih = Krs::with('matakuliah')
-                ->where('mahasiswa_id', $user->id)
+            $krsTerpilih = Krs::with('mataKuliah')
+                ->where('mahasiswa_id', $mahasiswaData->id) // gunakan ID dari model Mahasiswa
                 ->where('semester', $semesterInput)
                 ->get();
 
             // Hitung total SKS dari KRS mahasiswa
             $total_sks = $krsTerpilih->sum(function($krs) {
-                return $krs->matakuliah->sks ?? 0;
+                return $krs->mataKuliah->sks ?? 0;
             });
         }
 
@@ -65,53 +66,64 @@ class KrsController extends Controller
         return view('mahasiswa.krs.create', compact('matakuliah'));
     }
 
-public function store(Request $request)
-{
-    $user = Auth::user();
+    public function store(Request $request)
+    {
+        $user = Auth::user();
+        $mahasiswaData = $user->mahasiswa; // Ambil data mahasiswa
 
-    $request->validate([
-        'semester' => 'required|string',
-        'mata_kuliah_ids' => 'required|array',
-        'mata_kuliah_ids.*' => 'exists:mata_kuliahs,id',
-    ]);
+        $request->validate([
+            'semester' => 'required|string',
+            'mata_kuliah_ids' => 'required|array',
+            'mata_kuliah_ids.*' => 'exists:mata_kuliahs,id',
+        ]);
 
-    $semester = $request->semester;
-    $mataKuliahIds = $request->mata_kuliah_ids;
+        $semester = $request->semester;
+        $mataKuliahIds = $request->mata_kuliah_ids;
 
-    foreach ($mataKuliahIds as $mk_id) {
-        $matkul = MataKuliah::find($mk_id);
-        if (!$matkul) continue;
+        foreach ($mataKuliahIds as $mk_id) {
+            $matkul = MataKuliah::find($mk_id);
+            if (!$matkul) continue;
 
-        // Cek duplikat berdasarkan mahasiswa_id, semester, dan kode (karena kolom kode yang tersedia)
-        $exists = Krs::where('mahasiswa_id', $user->id)
-            ->where('semester', $semester)
-            ->where('kode_mk', $matkul->kode_mk)
-            ->exists();
+            // Cek duplikat berdasarkan mahasiswa_id, semester, dan mata_kuliah_id
+            $exists = Krs::where('mahasiswa_id', $mahasiswaData->id) // gunakan ID dari model Mahasiswa
+                ->where('semester', $semester)
+                ->where('mata_kuliah_id', $mk_id)
+                ->exists();
 
-        if (!$exists) {
-            Krs::create([
-                'mahasiswa_id' => $user->id,
-                'semester' => $semester,
-                'kode_mk' => $matkul->kode_mk,
-                'nama' => $matkul->nama,
-                'sks' => $matkul->sks,
-                'dosen' => $matkul->dosen,
-                'hari' => $matkul->hari,
-                'jam_mulai' => $matkul->jam_mulai,
-                'jam_selesai' => $matkul->jam_selesai,
-                'ruang' => $matkul->ruang,
-                'kelas' => $matkul->kelas,
-                'pernah_ambil' => 0,
-                'kehadiran' => 0,
-                'validasi' => null,
-                'tgl_input' => now(), // optional
-            ]);
+            if (!$exists) {
+                Krs::create([
+                    'mahasiswa_id' => $mahasiswaData->id, // gunakan ID dari model Mahasiswa
+                    'semester' => $semester,
+                    'mata_kuliah_id' => $mk_id,
+                    'pernah_ambil' => 0,
+                    'kehadiran' => 0,
+                    'validasi' => null,
+                    // 'tgl_input' => now(), // optional
+                ]);
+            }
         }
+
+        return redirect()->route('mahasiswa.krs.index', ['semester' => $semester])
+            ->with('success', 'Mata kuliah berhasil ditambahkan ke KRS.');
     }
 
-    return redirect()->route('mahasiswa.krs.index', ['semester' => $semester])
-        ->with('success', 'Mata kuliah berhasil ditambahkan ke KRS.');
-}
+    public function show(Krs $krs)
+    {
+        // Implementasikan logika untuk menampilkan detail KRS jika diperlukan
+    }
 
+    public function edit(Krs $krs)
+    {
+        // Implementasikan logika untuk mengedit KRS jika diperlukan
+    }
 
+    public function update(Request $request, Krs $krs)
+    {
+        // Implementasikan logika untuk memperbarui KRS jika diperlukan
+    }
+
+    public function destroy(Krs $krs)
+    {
+        // Implementasikan logika untuk menghapus KRS jika diperlukan
+    }
 }

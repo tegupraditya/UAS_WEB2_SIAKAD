@@ -12,11 +12,13 @@ return new class extends Migration
     public function up(): void
     {
         Schema::create('pengampu', function (Blueprint $table) {
-        $table->id();
-        $table->foreignId('dosen_id')->constrained('users')->onDelete('cascade');
-        $table->foreignId('mata_kuliah_id')->constrained('mata_kuliahs')->onDelete('cascade');
-        $table->timestamps();
-    });
+            $table->id();
+            $table->foreignId('dosen_id')->constrained('dosen')->onDelete('cascade');
+            $table->foreignId('mata_kuliah_id')->constrained('mata_kuliahs')->onDelete('cascade');
+            // Menambahkan unique constraint untuk mencegah duplikasi pengampu yang sama
+            $table->unique(['dosen_id', 'mata_kuliah_id']);
+            $table->timestamps();
+        });
     }
 
     /**

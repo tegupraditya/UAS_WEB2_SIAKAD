@@ -9,20 +9,20 @@ class Pengampu extends Model
 {
     use HasFactory;
 
+    protected $table = 'pengampu';
+
     protected $fillable = [
         'dosen_id',
         'mata_kuliah_id',
     ];
 
-    // Relasi ke User (dosen)
     public function dosen()
     {
-        return $this->belongsTo(User::class, 'dosen_id');
+        return $this->belongsTo(Dosen::class);
     }
 
-    // Relasi ke MataKuliah
     public function mataKuliah()
     {
-        return $this->belongsTo(MataKuliah::class, 'mata_kuliah_id');
+        return $this->belongsTo(MataKuliah::class);
     }
 }

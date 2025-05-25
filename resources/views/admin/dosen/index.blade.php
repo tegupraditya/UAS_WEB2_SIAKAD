@@ -48,9 +48,7 @@
         <tbody>
             @foreach($dosens as $dosen)
             <tr>
-                <td>{{ $dosen->name }}</td>
-                <td>{{ $dosen->email }}</td>
-                <td>{{ $dosen->nidn }}</td>
+                <td>{{ $dosen->user->name }}</td> <td>{{ $dosen->user->email }}</td> <td>{{ $dosen->nidn }}</td>
                 <td>
                     <a href="{{ route('admin.dosen.edit', $dosen->id) }}" class="btn btn-warning btn-sm">Edit</a>
 

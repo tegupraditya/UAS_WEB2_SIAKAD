@@ -55,13 +55,10 @@
         <tbody>
             @foreach ($mahasiswas as $mhs)
                 <tr>
-                    <td>{{ $mhs->name }}</td>
-                    <td>{{ $mhs->nim }}</td>
-                    <td>{{ $mhs->email }}</td>
-                    <td>{{ $mhs->jurusan }}</td>
+                    <td>{{ $mhs->user->name }}</td> <td>{{ $mhs->nim }}</td>
+                    <td>{{ $mhs->user->email }}</td> <td>{{ $mhs->jurusan }}</td>
                     <td>{{ $mhs->program }}</td>
-                    <td>{{ $mhs->dosen_pembimbing }}</td>
-                    <td>
+                    <td>{{ $mhs->dosenPembimbing ? $mhs->dosenPembimbing->user->name : '-' }}</td> <td>
                         <a href="{{ route('admin.mahasiswa.edit', $mhs->id) }}" class="btn btn-warning btn-sm">Edit</a>
                         <form action="{{ route('admin.mahasiswa.destroy', $mhs->id) }}" method="POST" class="d-inline" onsubmit="return confirm('Yakin ingin menghapus?')">
                             @csrf

@@ -12,13 +12,17 @@ return new class extends Migration
     public function up(): void
     {
         Schema::create('khs', function (Blueprint $table) {
-        $table->id();
-        $table->foreignId('mahasiswa_id')->constrained('users')->onDelete('cascade');
-        $table->foreignId('mata_kuliah_id')->constrained('mata_kuliahs')->onDelete('cascade');
-        $table->string('nilai'); // bisa A, B, C atau nilai angka
-        $table->string('semester'); // kode semester, atau foreign key ke tabel semester kalau mau konsisten
-        $table->timestamps();
-    });
+            $table->id();
+            $table->foreignId('mahasiswa_id')->constrained('mahasiswa')->onDelete('cascade');
+            $table->foreignId('mata_kuliah_id')->constrained('mata_kuliahs')->onDelete('cascade');
+            $table->string('semester'); // Mengacu ke semester perkuliahan
+            $table->float('nilai_akhir')->nullable();
+            $table->string('grade')->nullable();
+            $table->timestamps();
+
+            // Unique constraint agar seorang mahasiswa tidak memiliki hasil studi ganda untuk mata kuliah yang sama di semester yang sama
+            $table->unique(['mahasiswa_id', 'mata_kuliah_id', 'semester']);
+        });
     }
 
     /**

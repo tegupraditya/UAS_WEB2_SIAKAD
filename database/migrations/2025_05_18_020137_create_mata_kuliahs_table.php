@@ -22,6 +22,7 @@ return new class extends Migration
         $table->time('jam_selesai');
         $table->string('ruang');
         $table->string('kelas');
+        $table->string('semester');
         $table->timestamps();
     });
     

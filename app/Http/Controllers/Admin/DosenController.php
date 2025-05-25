@@ -3,14 +3,16 @@
 namespace App\Http\Controllers\Admin;
 
 use App\Models\User;
-use Illuminate\Http\Request;
+use App\Models\Dosen; // Import model Dosen
 use App\Http\Controllers\Controller;
+use Illuminate\Http\Request;
+use Illuminate\Support\Facades\DB;
 
 class DosenController extends Controller
 {
     public function index()
     {
-        $dosens = User::where('role', 'dosen')->get();
+        $dosens = Dosen::with('user')->get();
         return view('admin.dosen.index', compact('dosens'));
     }
 
@@ -25,53 +27,76 @@ class DosenController extends Controller
             'nama' => 'required|string|max:255',
             'email' => 'required|email|unique:users,email',
             'password' => 'required|min:6',
-            'nidn' => 'required|unique:users,nidn',
+            'nidn' => 'required|unique:dosen,nidn',
         ]);
 
-        User::create([
-            'name' => $request->nama,
-            'email' => $request->email,
-            'password' => bcrypt($request->password),
-            'role' => 'dosen',
-            'nidn' => $request->nidn,
-        ]);
+        DB::beginTransaction();
+        try {
+            $user = User::create([
+                'name' => $request->nama,
+                'email' => $request->email,
+                'password' => bcrypt($request->password),
+                'role' => 'dosen',
+            ]);
 
-        return redirect()->route('admin.dosen.index')->with('success', 'Akun dosen berhasil ditambahkan.');
+            Dosen::create([
+                'user_id' => $user->id,
+                'nidn' => $request->nidn,
+            ]);
+
+            DB::commit();
+            return redirect()->route('admin.dosen.index')->with('success', 'Akun dosen berhasil ditambahkan.');
+        } catch (\Exception $e) {
+            DB::rollBack();
+            return redirect()->back()->withInput()->withErrors(['error' => 'Gagal menambahkan akun dosen: ' . $e->getMessage()]);
+        }
     }
 
-    public function edit($id)
+    public function edit(Dosen $dosen)
     {
-        $dosen = User::where('id', $id)->where('role', 'dosen')->firstOrFail();
+        $dosen->load('user');
         return view('admin.dosen.edit', compact('dosen'));
     }
 
-    public function update(Request $request, $id)
+    public function update(Request $request, Dosen $dosen)
     {
-        $dosen = User::where('id', $id)->where('role', 'dosen')->firstOrFail();
-
         $request->validate([
             'nama' => 'required|string|max:255',
-            'email' => 'required|email|unique:users,email,' . $dosen->id,
-            'nidn' => 'required|unique:users,nidn,' . $dosen->id,
+            'email' => 'required|email|unique:users,email,' . $dosen->user->id,
+            'nidn' => 'required|unique:dosen,nidn,' . $dosen->id,
             'password' => 'nullable|min:6',
         ]);
 
-        $dosen->name = $request->nama;
-        $dosen->email = $request->email;
-        $dosen->nidn = $request->nidn;
+        DB::beginTransaction();
+        try {
+            $dosen->user->update([
+                'name' => $request->nama,
+                'email' => $request->email,
+                'password' => $request->password ? bcrypt($request->password) : $dosen->user->password,
+            ]);
 
-        if ($request->filled('password')) {
-            $dosen->password = bcrypt($request->password);
+            $dosen->update([
+                'nidn' => $request->nidn,
+            ]);
+
+            DB::commit();
+            return redirect()->route('admin.dosen.index')->with('success', 'Data dosen berhasil diperbarui.');
+        } catch (\Exception $e) {
+            DB::rollBack();
+            return redirect()->back()->withInput()->withErrors(['error' => 'Gagal memperbarui data dosen: ' . $e->getMessage()]);
         }
-
-        $dosen->save();
-
-        return redirect()->route('admin.dosen.index')->with('success', 'Data dosen berhasil diperbarui.');
     }
 
-    public function destroy($id)
+    public function destroy(Dosen $dosen)
     {
-        User::where('id', $id)->where('role', 'dosen')->delete();
-        return redirect()->back()->with('success', 'Akun dosen berhasil dihapus.');
+        DB::beginTransaction();
+        try {
+            $dosen->user->delete();
+            DB::commit();
+            return redirect()->back()->with('success', 'Akun dosen berhasil dihapus.');
+        } catch (\Exception $e) {
+            DB::rollBack();
+            return redirect()->back()->withErrors(['error' => 'Gagal menghapus akun dosen: ' . $e->getMessage()]);
+        }
     }
 }

@@ -54,9 +54,16 @@
         </div>
 
         <div class="mb-3">
-            <label for="dosen_pembimbing" class="form-label">Dosen Wali</label>
-            <input type="text" class="form-control @error('dosen_pembimbing') is-invalid @enderror" name="dosen_pembimbing" id="dosen_pembimbing" value="{{ old('dosen_pembimbing') }}" required>
-            @error('dosen_pembimbing')
+            <label for="dosen_pembimbing_id" class="form-label">Dosen Wali</label>
+            <select class="form-control @error('dosen_pembimbing_id') is-invalid @enderror" name="dosen_pembimbing_id" id="dosen_pembimbing_id" required>
+                <option value="">-- Pilih Dosen Wali --</option>
+                @foreach($dosens as $dosen)
+                    <option value="{{ $dosen->id }}" {{ old('dosen_pembimbing_id') == $dosen->id ? 'selected' : '' }}>
+                        {{ $dosen->user->name }} ({{ $dosen->nidn }})
+                    </option>
+                @endforeach
+            </select>
+            @error('dosen_pembimbing_id')
                 <div class="invalid-feedback">{{ $message }}</div>
             @enderror
         </div>
