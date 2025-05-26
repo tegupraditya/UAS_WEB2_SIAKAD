@@ -54,6 +54,10 @@
                     <input type="text" class="form-control" value="{{ $mahasiswa['program'] }}" readonly>
                 </div>
             </div>
+        @elseif(request('nim'))
+            <div class="alert alert-warning mt-4">
+                NIM yang Anda masukkan tidak ditemukan.
+            </div>
         @else
             <div class="alert alert-info mt-4">
                 Silakan masukkan NIM untuk melihat KHS.
@@ -63,8 +67,16 @@
     </div>
 </div>
 
-{{-- Tabel KHS --}}
-@if($khsData && $khsData->count() > 0)
+{{-- Tombol Aksi (Cetak KHS) --}}
+@if(request('nim') && isset($mahasiswa))
+    <div class="mb-3 mt-3">
+        <a href="{{ route('mahasiswa.khs.cetak-pdf', ['nim' => request('nim')]) }}" class="btn btn-info" target="_blank">Cetak KHS</a>
+        {{-- Anda bisa menambahkan tombol lain di sini jika diperlukan --}}
+    </div>
+@endif
+
+{{-- Tabel KHS hanya muncul jika NIM sudah dicari DAN data KHS ada --}}
+@if(request('nim') && $khsData && $khsData->count() > 0)
     <div class="card mt-4">
         <div class="card-header bg-secondary text-white">Kartu Hasil Studi</div>
         <div class="card-body p-0">
@@ -89,13 +101,18 @@
                             <td>{{ $khs->mataKuliah->kode_mk }}</td>
                             <td>{{ $khs->mataKuliah->nama }}</td>
                             <td>{{ $khs->mataKuliah->sks }}</td>
-                            <td>{{ $khs->pengampu->dosen_id}}</td>
+                            <td>
+                                @php
+                                    $dosenPengampu = $khs->mataKuliah->pengampu->firstWhere('semester', $khs->semester);
+                                @endphp
+                                {{ $dosenPengampu->dosen->user->name ?? '-' }}
+                            </td>
                             <td>{{ $khs->nilai_akhir ?? '-' }}</td>
                             <td>{{ $khs->grade ?? '-' }}</td>
                         </tr>
                     @empty
                         <tr>
-                            <td colspan="8" class="text-center">Data KHS tidak ditemukan untuk NIM ini.</td>
+                            <td colspan="8" class="text-center">Tidak ada data KHS untuk NIM ini.</td>
                         </tr>
                     @endforelse
                 </tbody>
@@ -107,11 +124,13 @@
     <div class="d-flex justify-content-between mt-3">
         <div>
             <span><strong>Total SKS:</strong> {{ $khsData->sum('mataKuliah.sks') }}</span>
-            {{-- Anda bisa menambahkan IPK di sini jika sudah dihitung di controller --}}
         </div>
         <div>
-            {{-- Tombol atau informasi tambahan jika diperlukan --}}
         </div>
+    </div>
+@elseif(request('nim') && (!isset($mahasiswa) || $khsData->count() === 0))
+    <div class="alert alert-warning mt-4">
+        Tidak ada data KHS untuk NIM ini.
     </div>
 @endif
 @endsection

@@ -26,6 +26,7 @@ Route::middleware('auth')->group(function () {
 
 Route::get('/krs', [KrsController::class, 'index'])->name('mahasiswa.krs.index');
 Route::get('/khs', [KhsController::class, 'index'])->name('mahasiswa.khs.index');
+Route::get('/mahasiswa/khs/cetak-pdf', [KhsController::class, 'cetakPdf'])->name('mahasiswa.khs.cetak-pdf');
 Route::get('mahasiswa/krs/create', [KrsController::class, 'create'])->name('mahasiswa.krs.create');
 Route::post('mahasiswa/krs', [KrsController::class, 'store'])->name('mahasiswa.krs.store');
 

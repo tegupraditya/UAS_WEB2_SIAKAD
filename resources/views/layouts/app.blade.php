@@ -45,7 +45,7 @@
     @endphp
 
     <nav class="navbar navbar-expand-lg navbar-custom px-4">
-        <div class="container-fluid">
+            <div class="container-fluid">
             <span class="navbar-brand">SIAKAD</span>
             @if ($user)
             <div class="ms-auto dropdown">
@@ -54,7 +54,7 @@
                     <strong class="ms-2">{{ $user->name }}</strong>
                 </a>
                 <ul class="dropdown-menu dropdown-menu-end" aria-labelledby="userDropdown">
-                    <li><a class="dropdown-item" href="{{ url('profile') }}">Profil</a></li>
+                    <li><a class="dropdown-item text-black" href="{{ url('profile') }}">Profil</a></li>
                     <li><hr class="dropdown-divider"></li>
                     <li>
                         <form action="{{ route('logout') }}" method="POST">
