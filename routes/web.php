@@ -8,6 +8,7 @@ use App\Http\Controllers\KrsController;
 use App\Http\Controllers\KhsController;
 use App\Http\Controllers\Admin\MataKuliahController;
 use App\Http\Middleware\AdminMiddleware;
+use App\Http\Middleware\DosenMiddleware;
 
 Route::get('/', function () {
     return view('welcome');
@@ -34,10 +35,21 @@ Route::middleware(['auth', AdminMiddleware::class])
     ->group(function () {
         Route::resource('mata-kuliah', MataKuliahController::class);
         Route::resource('/mahasiswa', App\Http\Controllers\Admin\MahasiswaController::class);
-        Route::resource('admin/mahasiswa', \App\Http\Controllers\Admin\MahasiswaController::class)->names('mahasiswa');
+        // Route::resource('admin/mahasiswa', \App\Http\Controllers\Admin\MahasiswaController::class)->names('mahasiswa');
         Route::resource('dosen', App\Http\Controllers\Admin\DosenController::class);
+        Route::resource('pengampu', App\Http\Controllers\Admin\PengampuController::class);
     });
 
+use App\Http\Controllers\Dosen\KhsController as DosenKhsController;
+
+Route::middleware(['auth', DosenMiddleware::class])
+    ->prefix('dosen')
+    ->name('dosen.')
+    ->group(function () {
+        Route::get('khs', [DosenKhsController::class, 'index'])->name('khs.index');
+        Route::get('khs/form/{pengampu}', [DosenKhsController::class, 'showForm'])->name('khs.form');
+        Route::post('khs/store', [DosenKhsController::class, 'store'])->name('khs.store');
+    });
 
 
 

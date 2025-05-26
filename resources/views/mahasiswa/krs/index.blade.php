@@ -104,22 +104,22 @@
                 </thead>
                 <tbody>
                     @foreach ($krsTerpilih as $index => $krs)
-                    @php $mk = $krs->matakuliah; @endphp
-                    <tr>
-                        <td>{{ $index + 1 }}</td>
-                        <td>{{ $mk->kode_mk }}</td>
-                        <td>{{ $mk->nama }}</td>
-                        <td>{{ $mk->sks }}</td>
-                        <td>{{ $mk->dosen }}</td>
-                        <td>{{ $mk->hari }}</td>
-                        <td>{{ $mk->jam_mulai }}</td>
-                        <td>{{ $mk->jam_selesai }}</td>
-                        <td>{{ $mk->ruang }}</td>
-                        <td>{{ $mk->kelas }}</td>
-                        <td>{{ $krs->pernah_ambil ?? '-' }}</td>
-                        <td class="text-danger">{{ number_format($krs->kehadiran ?? 0, 2) }}</td>
-                        <td class="text-success">{{ $krs->validasi ?? '-' }}</td>
-                    </tr>
+                        @php $mk = $krs->matakuliah; @endphp
+                        <tr>
+                            <td>{{ $index + 1 }}</td>
+                            <td>{{ $mk->kode_mk }}</td>
+                            <td>{{ $mk->nama }}</td>
+                            <td>{{ $mk->sks }}</td>
+                            <td>{{ $mk->pengampu->first()->dosen->user->name ?? '-' }}</td>
+                            <td>{{ $mk->pengampu->first()->hari ?? '-' }}</td>
+                            <td>{{ $mk->pengampu->first()->jam_mulai ? \Carbon\Carbon::parse($mk->pengampu->first()->jam_mulai)->format('H:i') : '-' }}</td>
+                            <td>{{ $mk->pengampu->first()->jam_selesai ? \Carbon\Carbon::parse($mk->pengampu->first()->jam_selesai)->format('H:i') : '-' }}</td>
+                            <td>{{ $mk->pengampu->first()->ruang ?? '-' }}</td>
+                            <td>{{ $mk->pengampu->first()->kelas ?? '-' }}</td>
+                            <td>{{ $krs->pernah_ambil ?? '-' }}</td>
+                            <td class="text-danger">{{ number_format($krs->kehadiran ?? 0, 2) }}</td>
+                            <td class="text-success">{{ $krs->validasi ?? '-' }}</td>
+                        </tr>
                     @endforeach
                 </tbody>
             </table>

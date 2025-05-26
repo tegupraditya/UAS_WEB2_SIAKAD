@@ -11,21 +11,14 @@ return new class extends Migration
      */
     public function up(): void
     {
-       Schema::create('mata_kuliahs', function (Blueprint $table) {
-        $table->id();
-        $table->string('kode_mk')->unique();
-        $table->string('nama');
-        $table->integer('sks');
-        $table->string('dosen');
-        $table->string('hari');
-        $table->time('jam_mulai');
-        $table->time('jam_selesai');
-        $table->string('ruang');
-        $table->string('kelas');
-        $table->string('semester');
-        $table->timestamps();
-    });
-    
+        Schema::create('mata_kuliahs', function (Blueprint $table) {
+            $table->id();
+            $table->string('kode_mk')->unique();
+            $table->string('nama');
+            $table->integer('sks');
+            // Kolom-kolom jadwal dan dosen dihapus dari sini
+            $table->timestamps();
+        });
     }
 
     /**

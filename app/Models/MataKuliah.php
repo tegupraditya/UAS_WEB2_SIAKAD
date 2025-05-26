@@ -15,13 +15,14 @@ class MataKuliah extends Model
         'kode_mk',
         'nama',
         'sks',
-        'dosen', // Ingat, ini string sesuai permintaan Anda
-        'hari',
-        'jam_mulai',
-        'jam_selesai',
-        'ruang',
-        'kelas',
-        'semester',
+        // Kolom-kolom berikut dihapus dari $fillable karena sudah dihapus dari tabel
+        // 'dosen',
+        // 'hari',
+        // 'jam_mulai',
+        // 'jam_selesai',
+        // 'ruang',
+        // 'kelas',
+        // 'semester',
     ];
 
     public function pengampu()

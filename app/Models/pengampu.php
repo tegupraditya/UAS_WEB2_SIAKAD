@@ -14,6 +14,12 @@ class Pengampu extends Model
     protected $fillable = [
         'dosen_id',
         'mata_kuliah_id',
+        'hari',
+        'jam_mulai',
+        'jam_selesai',
+        'ruang',
+        'kelas',
+        'semester',
     ];
 
     public function dosen()

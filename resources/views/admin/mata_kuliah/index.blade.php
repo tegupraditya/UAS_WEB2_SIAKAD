@@ -16,6 +16,7 @@
             </a>
             <ul class="dropdown-menu" aria-labelledby="adminDropdown">
                 <li><a class="dropdown-item" href="{{ route('admin.mata-kuliah.index') }}">Mata Kuliah</a></li>
+                <li><a class="dropdown-item" href="{{ route('admin.pengampu.index') }}">Dosen Pengampu</a></li>
             </ul>
         </li>
 
@@ -43,16 +44,10 @@
         <thead>
             <tr>
                 <th>#</th>
-                <th>KodeMK</th>
+                <th>Kode MK</th>
                 <th>Mata Kuliah</th>
                 <th>SKS</th>
-                <th>Dosen</th>
-                <th>Hari</th>
-                <th>Mulai</th>
-                <th>Selesai</th>
-                <th>Ruang</th>
-                <th>Kelas</th>
-                <th>Semester</th>
+                <th>Sesi Pengajaran</th> {{-- Kolom ini akan menampilkan Dosen, Hari, Jam, Ruang, Kelas, Semester --}}
                 <th>Aksi</th>
             </tr>
         </thead>
@@ -63,16 +58,21 @@
                     <td>{{ $mk->kode_mk }}</td>
                     <td>{{ $mk->nama }}</td>
                     <td>{{ $mk->sks }}</td>
-                    <td>{{ $mk->dosen }}</td>
-                    <td>{{ $mk->hari }}</td>
-                    <td>{{ $mk->jam_mulai }}</td>
-                    <td>{{ $mk->jam_selesai }}</td>
-                    <td>{{ $mk->ruang }}</td>
-                    <td>{{ $mk->kelas }}</td>
-                    <td>{{ $mk->semester }}</td>
+                    <td>
+                        @forelse ($mk->pengampu as $pengampu)
+                            <strong>Dosen:</strong> {{ $pengampu->dosen->user->name ?? '-' }} (NIDN: {{ $pengampu->dosen->nidn ?? '-' }})<br>
+                            <strong>Semester:</strong> {{ $pengampu->semester ?? '-' }}<br>
+                            <strong>Jadwal:</strong> {{ $pengampu->hari ?? '-' }}, {{ $pengampu->jam_mulai ? \Carbon\Carbon::parse($pengampu->jam_mulai)->format('H:i') : '-' }} - {{ $pengampu->jam_selesai ? \Carbon\Carbon::parse($pengampu->jam_selesai)->format('H:i') : '-' }}<br>
+                            <strong>Ruang:</strong> {{ $pengampu->ruang ?? '-' }}, <strong>Kelas:</strong> {{ $pengampu->kelas ?? '-' }}
+                            @if (!$loop->last)
+                                <hr class="my-1"> {{-- Garis pemisah antar sesi --}}
+                            @endif
+                        @empty
+                            <span class="text-muted">Belum ada sesi pengajaran.</span>
+                        @endforelse
+                    </td>
                     <td>
                         <a href="{{ route('admin.mata-kuliah.edit', $mk->id) }}" class="btn btn-warning btn-sm">Edit</a>
-
                         <form action="{{ route('admin.mata-kuliah.destroy', $mk->id) }}" method="POST" style="display:inline;" onsubmit="return confirm('Yakin hapus mata kuliah ini?')">
                             @csrf
                             @method('DELETE')
@@ -81,7 +81,7 @@
                     </td>
                 </tr>
             @empty
-                <tr><td colspan="11" class="text-center">Data Mata Kuliah kosong</td></tr>
+                <tr><td colspan="6" class="text-center">Data Mata Kuliah kosong</td></tr>
             @endforelse
         </tbody>
     </table>

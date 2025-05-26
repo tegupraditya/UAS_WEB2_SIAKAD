@@ -28,4 +28,9 @@ class Khs extends Model
     {
         return $this->belongsTo(MataKuliah::class);
     }
+
+    public function pengampu()
+    {
+        return $this->belongsTo(Pengampu::class, 'mata_kuliah_id', 'mata_kuliah_id');
+    }
 }

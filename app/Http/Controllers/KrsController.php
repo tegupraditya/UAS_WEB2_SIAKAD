@@ -4,8 +4,9 @@ namespace App\Http\Controllers;
 
 use Illuminate\Http\Request;
 use App\Models\MataKuliah;
-use App\Models\Krs;         // model KRS
+use App\Models\Krs;
 use Illuminate\Support\Facades\Auth;
+use App\Models\Pengampu; // Tambahkan import model Pengampu
 
 class KrsController extends Controller
 {
@@ -13,20 +14,19 @@ class KrsController extends Controller
     {
         $semesterInput = $request->input('semester');
         $user = Auth::user();
+        $mahasiswaData = $user->mahasiswa;
 
         if ($user->role !== 'mahasiswa') {
             abort(403, 'Unauthorized');
         }
 
-        // Biodata mahasiswa (gunakan relasi jika sudah diatur di model User)
-        $mahasiswaData = $user->mahasiswa;
         $mahasiswa = [
             'semester' => '20242', // sementara static, bisa sesuaikan
             'nim' => $mahasiswaData->nim ?? '-',
             'nama' => $user->name,
             'jurusan' => $mahasiswaData->jurusan ?? '-',
             'program' => $mahasiswaData->program ?? '-',
-            'dosen' => $mahasiswaData->dosenPembimbing->user->name ?? '-' // akses melalui relasi
+            'dosen' => $mahasiswaData->dosenPembimbing->user->name ?? '-'
         ];
 
         $matakuliah = collect();
@@ -34,12 +34,17 @@ class KrsController extends Controller
         $krsTerpilih = collect();
 
         if ($semesterInput === $mahasiswa['semester']) {
-            // Semua matakuliah di semester itu
-            $matakuliah = MataKuliah::where('semester', $semesterInput)->get();
+            // Ambil semua sesi pengajaran (pengampu) untuk semester ini
+            $pengampus = Pengampu::where('semester', $semesterInput)
+                ->with('mataKuliah', 'dosen.user')
+                ->get();
+
+            // Ambil mata kuliah dari sesi pengajaran yang tersedia
+            $matakuliah = $pengampus->pluck('mataKuliah')->unique('id');
 
             // Ambil matakuliah KRS yang sudah diambil mahasiswa (relasi dengan matakuliah)
             $krsTerpilih = Krs::with('mataKuliah')
-                ->where('mahasiswa_id', $mahasiswaData->id) // gunakan ID dari model Mahasiswa
+                ->where('mahasiswa_id', $mahasiswaData->id)
                 ->where('semester', $semesterInput)
                 ->get();
 
@@ -52,18 +57,25 @@ class KrsController extends Controller
         return view('mahasiswa.krs.index', compact('mahasiswa', 'matakuliah', 'krsTerpilih', 'total_sks', 'semesterInput'));
     }
 
-    public function create()
+    public function create(Request $request)
     {
         $user = Auth::user();
+        $mahasiswaData = $user->mahasiswa;
+        $semesterInput = $request->query('semester');
 
         if ($user->role !== 'mahasiswa') {
             abort(403, 'Unauthorized');
         }
 
-        // Ambil daftar matakuliah yang bisa dipilih untuk tambah KRS
-        $matakuliah = MataKuliah::all(); // bisa disaring sesuai kebutuhan
+        // Ambil daftar sesi pengajaran (pengampu) untuk semester ini
+        $pengampus = Pengampu::where('semester', $semesterInput)
+            ->with('mataKuliah', 'dosen.user')
+            ->get();
 
-        return view('mahasiswa.krs.create', compact('matakuliah'));
+        // Ambil mata kuliah dari sesi pengajaran yang tersedia
+        $matakuliah = $pengampus->pluck('mataKuliah')->unique('id');
+
+        return view('mahasiswa.krs.create', compact('matakuliah', 'semesterInput'));
     }
 
     public function store(Request $request)
@@ -98,7 +110,6 @@ class KrsController extends Controller
                     'pernah_ambil' => 0,
                     'kehadiran' => 0,
                     'validasi' => null,
-                    // 'tgl_input' => now(), // optional
                 ]);
             }
         }

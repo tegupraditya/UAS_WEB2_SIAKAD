@@ -28,8 +28,9 @@
                         Dosen
                     </a>
                     <ul class="dropdown-menu" aria-labelledby="dosenDropdown">
-                        <li><a class="dropdown-item" href="{{ url('jadwal') }}">Jadwal Mata Kuliah</a></li>
-                        <li><a class="dropdown-item" href="{{ url('absensi') }}">Absensi</a></li>
+                        {{-- <li><a class="dropdown-item" href="{{ url('jadwal') }}">Jadwal Mata Kuliah</a></li>
+                        <li><a class="dropdown-item" href="{{ url('absensi') }}">Absensi</a></li> --}}
+                        <li><a class="dropdown-item" href="{{ route('dosen.khs.index') }}">Kelola KHS</a></li>
                     </ul>
                 </li>
             @endif
@@ -43,6 +44,7 @@
                     </a>
                     <ul class="dropdown-menu" aria-labelledby="adminDropdown">
                         <li><a class="dropdown-item" href="{{ route('admin.mata-kuliah.index') }}">Mata Kuliah</a></li>
+                        <li><a class="dropdown-item" href="{{ route('admin.pengampu.index') }}">Dosen Pengampu</a></li>
                     </ul>
                 </li>
 

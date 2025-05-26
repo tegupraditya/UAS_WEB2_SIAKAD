@@ -25,17 +25,9 @@ class MataKuliahController extends Controller
             'kode_mk' => 'required|unique:mata_kuliahs',
             'nama' => 'required',
             'sks' => 'required|integer',
-            'dosen' => 'required',
-            'hari' => 'required',
-            'jam_mulai' => 'required',
-            'jam_selesai' => 'required',
-            'ruang' => 'required',
-            'kelas' => 'required',
-            'semester' => 'required',
-
         ]);
 
-        MataKuliah::create($request->all());
+        MataKuliah::create($request->only(['kode_mk', 'nama', 'sks']));
 
         return redirect()->route('admin.mata-kuliah.index')->with('success', 'Mata Kuliah berhasil ditambahkan.');
     }
@@ -51,16 +43,9 @@ class MataKuliahController extends Controller
             'kode_mk' => 'required|unique:mata_kuliahs,kode_mk,' . $mataKuliah->id,
             'nama' => 'required',
             'sks' => 'required|integer',
-            'dosen' => 'required',
-            'hari' => 'required',
-            'jam_mulai' => 'required',
-            'jam_selesai' => 'required',
-            'ruang' => 'required',
-            'kelas' => 'required',
-            'semester' => 'required',
         ]);
 
-        $mataKuliah->update($request->all());
+        $mataKuliah->update($request->only(['kode_mk', 'nama', 'sks']));
 
         return redirect()->route('admin.mata-kuliah.index')->with('success', 'Mata Kuliah berhasil diperbarui.');
     }
