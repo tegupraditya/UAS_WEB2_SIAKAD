@@ -52,7 +52,6 @@
                         <th>Nama Mahasiswa</th>
                         <th>Nilai Akhir</th>
                         <th>Grade</th>
-                        <th>Status</th>
                     </tr>
                 </thead>
                 <tbody>
@@ -69,11 +68,7 @@
                                 <span id="huruf-{{ $index }}" class="badge bg-secondary">{{ old('grade.' . $index, $mahasiswa->khs->first()->grade ?? '-') }}</span>
                                 <input type="hidden" name="grade[{{ $index }}]" id="grade-{{ $index }}" value="{{ old('grade.' . $index, $mahasiswa->khs->first()->grade ?? '') }}">
                             </td>
-                            <td>
-                                <span id="status-{{ $index }}">
-                                    {{ $mahasiswa->khs->first()->nilai_akhir ? 'Sudah Dinilai' : 'Belum Dinilai' }}
-                                </span>
-                            </td>
+                           
                         </tr>
                     @empty
                         <tr><td colspan="6" class="text-center">Tidak ada mahasiswa yang mengambil mata kuliah ini di semester ini.</td></tr>
